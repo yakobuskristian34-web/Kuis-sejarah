@@ -3,55 +3,211 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Simulasi Sejarah Kelas XII - Bab 1</title>
+  <title>Simulasi Ujian Sejarah Kelas XII - Bab 1</title>
   <style>
-    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f6f9; color: #333; margin: 0; padding: 20px; }
-    .container { max-width: 700px; margin: 0 auto; background: white; padding: 25px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
-    h1 { font-size: 1.5rem; color: #1a365d; margin-bottom: 5px; }
-    .subtitle { font-size: 0.9rem; color: #666; margin-bottom: 20px; }
-    .question-card { margin-bottom: 25px; padding-bottom: 15px; border-bottom: 1px solid #e2e8f0; }
-    .question-title { font-weight: 600; font-size: 1.05rem; margin-bottom: 12px; }
-    .options { display: flex; flex-direction: column; gap: 8px; }
-    .option-btn { padding: 10px 15px; border: 1px solid #cbd5e0; border-radius: 6px; background: #f8fafc; cursor: pointer; text-align: left; font-size: 0.95rem; transition: background 0.2s; }
-    .option-btn:hover { background: #edf2f7; }
-    .feedback { margin-top: 10px; padding: 10px 12px; border-radius: 6px; font-size: 0.9rem; display: none; }
-    .correct { background-color: #c6f6d5; color: #22543d; border: 1px solid #9ae6b4; }
-    .incorrect { background-color: #fed7d7; color: #742a2a; border: 1px solid #feb2b2; }
-    .btn-submit { display: block; width: 100%; padding: 12px; background: #2b6cb0; color: white; border: none; border-radius: 6px; font-size: 1rem; font-weight: bold; cursor: pointer; margin-top: 20px; }
-    .btn-submit:hover { background: #2c5282; }
-    #score-board { display: none; margin-top: 25px; padding: 20px; background: #ebf8ff; border: 1px solid #bee3f8; border-radius: 8px; text-align: center; }
-    #score-board h2 { font-size: 1.8rem; color: #2b6cb0; margin: 0; }
+    * { box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      background-color: #f0f2f5;
+      color: #1c1e21;
+      margin: 0;
+      padding: 20px;
+    }
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background: #ffffff;
+      border-radius: 12px;
+      padding: 30px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    }
+    .header {
+      text-align: center;
+      border-bottom: 2px solid #e4e6eb;
+      padding-bottom: 20px;
+      margin-bottom: 25px;
+    }
+    .header h1 {
+      color: #1a365d;
+      font-size: 1.8rem;
+      margin: 0 0 10px 0;
+    }
+    .header p {
+      color: #606770;
+      margin: 0;
+      font-size: 1rem;
+    }
+    .question-card {
+      background: #f7f8fa;
+      border: 1px solid #e4e6eb;
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    .question-title {
+      font-weight: 600;
+      font-size: 1.05rem;
+      margin-bottom: 15px;
+      color: #050505;
+      line-height: 1.4;
+    }
+    .options-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .option-btn {
+      display: block;
+      width: 100%;
+      text-align: left;
+      padding: 12px 16px;
+      background: #ffffff;
+      border: 1px solid #ccd0d5;
+      border-radius: 6px;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      color: #1c1e21;
+    }
+    .option-btn:hover:not([disabled]) {
+      background: #e7f3ff;
+      border-color: #1877f2;
+    }
+    .option-btn:disabled {
+      cursor: default;
+    }
+    .feedback {
+      margin-top: 15px;
+      padding: 12px 16px;
+      border-radius: 6px;
+      font-size: 0.95rem;
+      line-height: 1.5;
+      display: none;
+    }
+    .feedback.correct {
+      background-color: #e6f4ea;
+      color: #137333;
+      border: 1px solid #ceead6;
+    }
+    .feedback.incorrect {
+      background-color: #fce8e6;
+      color: #c5221f;
+      border: 1px solid #fad2cf;
+    }
+    .btn-finish {
+      display: block;
+      width: 100%;
+      padding: 15px;
+      background: #1a73e8;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 1.1rem;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 30px;
+      transition: background 0.2s;
+    }
+    .btn-finish:hover {
+      background: #1557b0;
+    }
+    #score-modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.6);
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 1000;
+    }
+    .modal-content {
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      max-width: 500px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    }
+    .modal-content h2 {
+      margin-top: 0;
+      color: #1a365d;
+    }
+    .score-number {
+      font-size: 3rem;
+      font-weight: bold;
+      color: #1a73e8;
+      margin: 15px 0;
+    }
+    .btn-close {
+      padding: 10px 25px;
+      background: #5f6368;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+    .btn-close:hover {
+      background: #3c4043;
+    }
   </style>
 </head>
 <body>
 
 <div class="container">
-  <h1>Simulasi Sejarah Kelas XII - Bab 1</h1>
-  <div class="subtitle">Perjuangan Mempertahankan Kemerdekaan</div>
+  <div class="header">
+    <h1>Simulasi Ujian Sejarah Kelas XII</h1>
+    <p>Bab 1: Perjuangan Mempertahankan Kemerdekaan (30 Soal)</p>
+  </div>
 
   <div id="quiz-container"></div>
 
-  <button class="btn-submit" onclick="calculateScore()">Selesai & Lihat Skor</button>
+  <button class="btn-finish" onclick="showFinalScore()">Selesai & Lihat Skor Akhir</button>
+</div>
 
-  <div id="score-board">
-    <h3>Hasil Simulasi Kamu:</h3>
-    <h2 id="final-score">0 / 100</h2>
-    <p id="score-text"></p>
+<div id="score-modal">
+  <div class="modal-content">
+    <h2>Hasil Simulasi Kamu</h2>
+    <div class="score-number" id="modal-score">0 / 100</div>
+    <p id="modal-text"></p>
+    <button class="btn-close" onclick="closeModal()">Tutup & Review Jawaban</button>
   </div>
 </div>
 
 <script>
 const quizData = [
-  { q: "1. Konvensi Montevideo 1933 mengatur tentang...", options: ["A. Pengakuan de facto Belanda", "B. Syarat berdirinya sebuah negara", "C. Hak menentukan nasib sendiri", "D. Pembentukan Komisi Tiga Negara"], answer: 1, explanation: "Konvensi Montevideo 1933 mengatur syarat berdirinya negara: rakyat, wilayah, pemerintahan, dan kemampuan hubungan luar negeri." },
-  { q: "2. Hasil Sidang Pertama PPKI pada 18 Agustus 1945 adalah...", options: ["A. Membentuk 12 Departemen", "B. Membentuk BKR", "C. Mengesahkan UUD 1945 dan memilih Presiden/Wapres", "D. Menetapkan pembentukan partai politik"], answer: 2, explanation: "Sidang I PPKI menghasilkan 3 hal: Mengesahkan UUD 1945, memilih Soekarno-Hatta, dan membentuk Komite Nasional." },
-  { q: "3. BKR dibentuk sebagai badan keamanan dan bukan tentara resmi bertujuan untuk...", options: ["A. Menghemat anggaran", "B. Tidak memancing kecurigaan tentara Jepang", "C. Menghindari serangan Sekutu", "D. Menunggu bentukan tentara Belanda"], answer: 1, explanation: "BKR dibentuk agar tidak memancing kecurigaan pihak Jepang yang saat itu masih bersenjata lengkap." },
-  { q: "4. Hari Pahlawan 10 November dipicu oleh peristiwa pertempuran di...", options: ["A. Ambarawa", "B. Bandung", "C. Surabaya", "D. Medan"], answer: 2, explanation: "Pertempuran Surabaya puncaknya terjadi pada 10 November 1945 pasca tewasnya Brigjen Mallaby." },
-  { q: "5. Perjanjian Linggarjati menyatakan bahwa wilayah de facto RI meliputi...", options: ["A. Jawa, Madura, dan Sumatra", "B. Jawa dan Bali saja", "C. Seluruh wilayah bekas Hindia Belanda", "D. Sumatra dan Sulawesi"], answer: 0, explanation: "Perjanjian Linggarjati menghasilkan pengakuan de facto RI atas Jawa, Madura, dan Sumatra." },
-  { q: "6. Agresi Militer Belanda II terjadi pada 19 Desember 1948 dengan sasaran utama...", options: ["A. Jakarta", "B. Surabaya", "C. Bukittinggi", "D. Yogyakarta"], answer: 3, explanation: "Agresi Militer II mengincar ibu kota Yogyakarta dan menawan Soekarno-Hatta." },
-  { q: "7. Tujuan utama digelarnya Serangan Umum 1 Maret 1949 adalah...", options: ["A. Mengusir Belanda secara permanen", "B. Membuktikan kepada dunia bahwa RI dan TNI masih ada", "C. Menangkap pimpinan tentara Belanda", "D. Menguasai pelabuhan strategis"], answer: 1, explanation: "Serangan Umum 1 Maret bertujuan membuktikan ke dunia internasional bahwa RI dan TNI masih ada." },
-  { q: "8. Peristiwa pembumihangusan kota sebelum mengungsi dikenal dengan sebutan...", options: ["A. Pertempuran Medan Area", "B. Bandung Lautan Api", "C. Puputan Margarana", "D. Peristiwa Tiga Daerah"], answer: 1, explanation: "Bandung Lautan Api adalah aksi pembumihangusan Bandung Selatan atas instruksi PM Sutan Sjahrir." },
-  { q: "9. Lembaga pengganti KTN yang dibentuk PBB dengan wewenang lebih besar adalah...", options: ["A. NICA", "B. UNCI", "C. BFO", "D. AFNEI"], answer: 1, explanation: "KTN diubah menjadi UNCI (United Nations Commission for Indonesia) dengan wewenang yang lebih luas." },
-  { q: "10. Pengakuan kedaulatan Indonesia oleh Belanda sebagai hasil KMB terjadi pada tanggal...", options: ["A. 17 Agustus 1945", "B. 1 Maret 1949", "C. 27 Desember 1949", "D. 3 November 1945"], answer: 2, explanation: "Penyerahan/pengakuan kedaulatan RIS oleh Belanda dilaksanakan pada 27 Desember 1949." }
+  { q: "1. Syarat-syarat berdirinya sebuah negara seperti rakyat, wilayah, pemerintahan, dan kemampuan menjalin hubungan luar negeri diatur dalam...", options: ["A. Piagam Atlantik 1941", "B. Konvensi Montevideo 1933", "C. Piagam PBB 1945", "D. Perjanjian Linggarjati"], answer: 1, exp: "Konvensi Montevideo 1933 menetapkan 4 syarat kualifikasi negara sebagai subjek hukum internasional." },
+  { q: "2. Pengakuan hak setiap bangsa untuk menentukan nasibnya sendiri tercantum dalam kesepakatan internasional...", options: ["A. Konvensi Montevideo", "B. Civil Affairs Agreement", "C. Piagam Atlantik 1941", "D. Resolusi Jihad"], answer: 2, exp: "Piagam Atlantik (Atlantic Charter) 1941 mengakui hak setiap bangsa untuk menentukan nasibnya sendiri (self-determination)." },
+  { q: "3. Proklamasi Kemerdekaan Indonesia dikumandangkan oleh Soekarno-Hatta dan disiarkan pada malam harinya melalui...", options: ["A. Radio Republik Indonesia", "B. BBC London", "C. Radio Hoso Kyoku", "D. Radio Nirom"], answer: 2, exp: "Berita proklamasi pertama kali disiarkan ke dunia melalui studio Radio Hoso Kyoku pada malam 17 Agustus 1945." },
+  { q: "4. Salah satu dari tiga keputusan penting dalam sidang pertama PPKI tanggal 18 Agustus 1945 adalah...", options: ["A. Membentuk 12 Departemen", "B. Membentuk Badan Keamanan Rakyat (BKR)", "C. Mengesahkan UUD 1945", "D. Membentuk Komite Nasional Daerah"], answer: 2, exp: "Sidang I PPKI (18 Ags 1945): Mengesahkan UUD 1945, memilih Presiden & Wapres, serta membentuk Komite Nasional." },
+  { q: "5. Penetapan pembentukan 12 departemen dan 8 provinsi merupakan hasil keputusan sidang PPKI yang dilaksanakan pada...", options: ["A. 18 Agustus 1945", "B. 19 Agustus 1945", "C. 22 Agustus 1945", "D. 3 November 1945"], answer: 1, exp: "Sidang II PPKI pada 19 Agustus 1945 menetapkan pembentukan 12 departemen, 8 provinsi, KND, dan Kabinet Presidensial." },
+  { q: "6. Pembentukan Badan Keamanan Rakyat (BKR) diputuskan pada sidang PPKI ketiga tanggal...", options: ["A. 18 Agustus 1945", "B. 19 Agustus 1945", "C. 22 Agustus 1945", "D. 5 Oktober 1945"], answer: 2, exp: "Sidang III PPKI pada 22 Agustus 1945 memutuskan pembentukan KNI, PNI, dan BKR." },
+  { q: "7. BKR sengaja tidak dibentuk sebagai tentara resmi pada awal kemerdekaan dengan alasan...", options: ["A. Indonesia belum memiliki senjata", "B. Tidak memancing kecurigaan tentara Jepang yang masih bersenjata", "C. Sekutu melarang pembentukan tentara", "D. Mencegah terjadinya bentrokan antar laskar"], answer: 1, exp: "BKR dibentuk agar tidak memicu konfrontasi prematur dengan tentara Jepang yang masih bersenjata lengkap." },
+  { q: "8. Cikal bakal Tentara Nasional Indonesia (TNI) lahir ketika BKR diubah menjadi TKR pada tanggal...", options: ["A. 17 Agustus 1945", "B. 5 Oktober 1945", "C. 10 November 1945", "D. 14 November 1945"], answer: 1, exp: "Pada 5 Oktober 1945 dikeluarkan maklumat pembentukan Tentara Keamanan Rakyat (TKR) yang diperingati sebagai hari lahir TNI." },
+  { q: "9. Maklumat Wakil Presiden tanggal 3 November 1945 berisi tentang...", options: ["A. Pembentukan TKR", "B. Perubahan sistem kabinet menjadi parlementer", "C. Mendorong berdirinya partai-partai politik", "D. Pemindahan ibu kota ke Yogyakarta"], answer: 2, exp: "Maklumat 3 November 1945 yang ditandatangani Moh. Hatta mendorong pembentukan partai politik untuk menunjukkan iklim demokrasi." },
+  { q: "10. Perubahan sistem pemerintahan Indonesia dari Kabinet Presidensial menjadi Kabinet Parlementer didasarkan pada...", options: ["A. Maklumat 14 November 1945", "B. Maklumat 3 November 1945", "C. Keputusan Sidang PPKI II", "D. Hasil Perundingan Linggarjati"], answer: 0, exp: "Maklumat 14 November 1945 mengubah kabinet presidensial menjadi parlementer dengan PM Sutan Sjahrir sebagai kepala pemerintahan." },
+  { q: "11. Peristiwa sasaran amuk massa terhadap bangsawan/pemilik perkebunan pada 1945–1946 oleh Belanda dinamakan...", options: ["A. Bersiap", "B. Civil Affairs", "C. Puputan", "D. Gedor"], answer: 0, exp: "Belanda menggunakan istilah Masa 'Bersiap' untuk menyebut kekacauan dan revolusi sosial yang terjadi pada 1945-1946." },
+  { q: "12. Menurut sejarawan Bonnie Triyana, istilah 'Bersiap' kurang tepat karena cenderung bias dan lebih tepat disebut...", options: ["A. Agresi Militer", "B. Perang Gerilya", "C. Revolusi Sosial", "D. Peristiwa Pengambilalihan"], answer: 2, exp: "Bonnie Triyana menyuarakan bahwa konteks peristiwa tersebut adalah 'revolusi sosial' akibat penindasan masa penjajahan." },
+  { q: "13. Kedatangan pasukan Sekutu yang diboncengi NICA ke Indonesia didasarkan pada kesepakatan...", options: ["A. Perjanjian Renville", "B. Civil Affairs Agreement", "C. Perjanjian Linggarjati", "D. Konvensi Montevideo"], answer: 1, exp: "Civil Affairs Agreement (24 Agustus 1945) adalah kesepakatan Britania Raya dan Belanda mengenai penyerahan kekuasaan di Indonesia." },
+  { q: "14. Pertempuran Medan Area pada 13 Oktober 1945 dipicu oleh tindakan NICA berupa...", options: ["A. Penangkapan para pemuda", "B. Pelanggaran garis demarkasi", "C. Penginjakan lencana Merah Putih", "D. Pemboman markas TKR"], answer: 2, exp: "Insiden dipicu oleh penghuni hotel yang merebut dan menginjak-injak lencana Merah Putih milik seorang pemuda Indonesia." },
+  { q: "15. Aksi membumihanguskan Bandung Selatan dilakukan rakyat atas instruksi dari...", options: ["A. Presiden Soekarno", "B. Perdana Menteri Sutan Sjahrir", "C. Jenderal Soedirman", "D. Moh. Hatta"], answer: 1, exp: "PM Sutan Sjahrir menginstruksikan pengosongan dan pembumihangusan Bandung Selatan agar tidak dimanfaatkan Sekutu." },
+  { q: "16. Pertempuran Ambarawa (21 Nov – 15 Des 1945) berhasil dimenangkan oleh pasukan TKR di bawah pimpinan...", options: ["A. Kolonel Soedirman", "B. Bung Tomo", "C. I Gusti Ngurah Rai", "D. Syafruddin Prawiranegara"], answer: 0, exp: "Kolonel Soedirman memimpin TKR menggunakan taktik Supit Urang dan berhasil memukul mundur pasukan Sekutu di Ambarawa." },
+  { q: "17. Hari Santri yang diperingati setiap 22 Oktober merujuk pada peristiwa...", options: ["A. Pertempuran Surabaya 10 November", "B. Resolusi Jihad oleh KH Hasyim Asy'ari", "C. Pertempuran Lima Hari di Semarang", "D. Serangan Umum 1 Maret"], answer: 1, exp: "Resolusi Jihad KH Hasyim Asy'ari pada 22 Oktober 1945 membakar semangat para santri dan pemuda bertempur di Surabaya." },
+  { q: "18. Pertempuran di Bali di mana I Gusti Ngurah Rai beserta pasukannya gugur secara terhormat dinamakan...", options: ["A. Pertempuran Medan Area", "B. Puputan Margarana", "C. Peristiwa Tiga Daerah", "D. Revolusi Pidie"], answer: 1, exp: "Puputan Margarana (20 Nov 1946) adalah pertempuran perang sampai titik darah penghabisan di bawah pimpinan I Gusti Ngurah Rai." },
+  { q: "19. Kekejaman pasukan khusus Belanda pimpinan Kapten Westerling yang menewaskan ribuan rakyat terjadi di daerah...", options: ["A. Palembang", "B. Depok", "C. Makassar", "D. Pidie"], answer: 2, exp: "Pembantaian Westerling terjadi di Sulawesi Selatan (Makassar) dalam rangka menumpas perlawanan rakyat terhadap Belanda." },
+  { q: "20. Alasan utama pemindahan Ibu Kota RI dari Jakarta ke Yogyakarta pada awal kemerdekaan adalah...", options: ["A. Jakarta dikuasai oleh Belanda/NICA dan tawaran dari Sri Sultan Hamengku Buwono IX", "B. Yogyakarta lebih aman dari serangan udara", "C. Adanya dorongan dari PBB", "D. Mencegah ancaman pemberontakan dalam negeri"], answer: 0, exp: "Situasi Jakarta sangat tidak aman akibat teror NICA, sehingga pemerintah menerima tawaran Sri Sultan HB IX pindah ke Jogja." },
+  { q: "21. Perundangan Linggarjati menghasilkan pengakuan de facto Belanda atas wilayah RI yang meliputi...", options: ["A. Jawa, Madura, dan Bali", "B. Jawa, Madura, dan Sumatra", "C. Seluruh wilayah Hindia Belanda", "D. Sumatra, Kalimantan, dan Jawa"], answer: 1, exp: "Hasil Perjanjian Linggarjati (1946) mengakui secara de facto wilayah RI terbatas pada Jawa, Madura, dan Sumatra." },
+  { q: "22. Badan PBB yang dibentuk untuk menengahi konflik Indonesia-Belanda pasca Agresi Militer I adalah...", options: ["A. UNCI", "B. KTN (Komisi Tiga Negara)", "C. AFNEI", "D. BFO"], answer: 1, exp: "DK PBB membentuk KTN yang beranggotakan Australia (pilihan RI), Belgia (pilihan Belanda), dan AS (netral)." },
+  { q: "23. Dampak politik dari disepakatinya Perjanjian Renville bagi Indonesia adalah...", options: ["A. Wilayah RI semakin meluas", "B. Wilayah RI menyempit dan mundurnya PM Amir Sjarifuddin", "C. Pengakuan kedaulatan penuh oleh Belanda", "D. Pengembalian Yogyakarta ke tangan RI"], answer: 1, exp: "Perjanjian Renville sangat merugikan karena wilayah RI menyempit (Garis Van Mook) dan memicu krisis politik kabinet Amir Sjarifuddin." },
+  { q: "24. Pemberontakan FDR/PKI di Madiun tahun 1948 dipimpin oleh...", options: ["A. Westerling", "B. Musso", "C. Kartosoewirjo", "D. Soumokil"], answer: 1, exp: "Pemberontakan Madiun 1948 dipimpin oleh Musso yang memproklamasikan 'Soviet Republik Indonesia'." },
+  { q: "25. Penumpasan pemberontakan Madiun 1948 secara tegas oleh pemerintah RI memberikan dampak diplomasi yaitu...", options: ["A. Belanda menghentikan agresinya", "B. Memperkuat dukungan Amerika Serikat terhadap Indonesia", "C. PBB langsung mengakui kemerdekaan Indonesia", "D. Dibentuknya UNCI secara mendadak"], answer: 1, exp: "Tindakan tegas RI membuktikan sikap anti-komunis, sehingga AS mengalihkan dukungan diplomasinya kepada Indonesia dalam Perang Dingin." },
+  { q: "26. Pemerintah Darurat Republik Indonesia (PDRI) di Bukittinggi dibentuk di bawah pimpinan...", options: ["A. Moh. Hatta", "B. Sutan Sjahrir", "C. Syafruddin Prawiranegara", "D. Jawaharlal Nehru"], answer: 2, exp: "Saat Presiden/Wapres ditawan pada Agresi II, Syafruddin Prawiranegara membentuk PDRI di Sumatra untuk menjaga eksistensi pemerintahan." },
+  { q: "27. Tujuan utama TNI menggelar Serangan Umum 1 Maret 1949 di Yogyakarta adalah...", options: ["A. Membunuh Jenderal Van Mook", "B. Membuktikan kepada dunia internasional bahwa RI dan TNI masih eksis", "C. Mengambil alih benteng Vredeburg", "D. Membebaskan Soekarno-Hatta secara paksa"], answer: 1, exp: "Serangan 6 jam di Jogja mendobrak propaganda Belanda dan membuktikan ke dunia luar bahwa TNI/RI masih berdiri kuat." },
+  { q: "28. Konferensi Asia di New Delhi yang mendukung perjuangan kemerdekaan Indonesia diprakarsai oleh PM India...", options: ["A. Mahatma Gandhi", "B. Jawaharlal Nehru", "C. Ali Jinnah", "D. Indira Gandhi"], answer: 1, exp: "PM Jawaharlal Nehru memprakarsai Konferensi Asia di New Delhi (1949) untuk mendesak PBB menyelesaikan agresi Belanda." },
+  { q: "29. Perundingan yang menyepakati bahwa Indonesia bersedia menghentikan perang gerilya dan menghadiri KMB adalah...", options: ["A. Perjanjian Linggarjati", "B. Perjanjian Renville", "C. Persetujuan Roem-Roijen", "D. Konferensi Inter-Indonesia"], answer: 2, exp: "Persetujuan Roem-Roijen (7 Mei 1949) menjadi jalan pembuka kembalinya pemerintahan RI ke Jogja dan pelaksanaan KMB." },
+  { q: "30. Salah satu keputusan penting dalam Konferensi Meja Bundar (KMB) di Den Haag adalah...", options: ["A. Belanda menyerahkan Irian Barat seketika itu juga", "B. Penyerahan/pengakuan kedaulatan dilaksanakan pada 27 Desember 1949", "C. Indonesia tidak perlu menanggung utang Hindia Belanda", "D. Bentuk negara tetap Negara Kesatuan Republik Indonesia"], answer: 1, exp: "Hasil KMB menetapkan Belanda mengakui kedaulatan RIS pada 27 Desember 1949, sementara Irian Barat ditunda 1 tahun." }
 ];
 
 function renderQuiz() {
@@ -61,7 +217,7 @@ function renderQuiz() {
     card.className = 'question-card';
     card.innerHTML = `
       <div class="question-title">${data.q}</div>
-      <div class="options">
+      <div class="options-grid">
         ${data.options.map((opt, optIndex) => `
           <button class="option-btn" onclick="checkAnswer(${index}, ${optIndex}, this)">${opt}</button>
         `).join('')}
@@ -77,25 +233,29 @@ function checkAnswer(qIndex, selectedOpt, btn) {
   const feedbackEl = document.getElementById(`feedback-${qIndex}`);
   const parent = btn.parentElement;
   
-  // Disable all buttons in this question once answered
   const buttons = parent.querySelectorAll('.option-btn');
   buttons.forEach(b => b.disabled = true);
 
   if (selectedOpt === data.answer) {
-    btn.style.background = '#9ae6b4';
+    btn.style.background = '#e6f4ea';
+    btn.style.borderColor = '#34a853';
+    btn.style.fontWeight = 'bold';
     feedbackEl.className = 'feedback correct';
-    feedbackEl.innerHTML = `<b>Benar!</b> ${data.explanation}`;
+    feedbackEl.innerHTML = `<b>Jawaban Benar!</b><br>${data.exp}`;
     btn.dataset.correct = "true";
   } else {
-    btn.style.background = '#feb2b2';
-    buttons[data.answer].style.background = '#9ae6b4';
+    btn.style.background = '#fce8e6';
+    btn.style.borderColor = '#ea4335';
+    buttons[data.answer].style.background = '#e6f4ea';
+    buttons[data.answer].style.borderColor = '#34a853';
+    buttons[data.answer].style.fontWeight = 'bold';
     feedbackEl.className = 'feedback incorrect';
-    feedbackEl.innerHTML = `<b>Salah!</b> Jawaban yang benar adalah <b>${data.options[data.answer]}</b>.<br>${data.explanation}`;
+    feedbackEl.innerHTML = `<b>Jawaban Kamu Salah.</b><br>Jawaban yang benar: <b>${data.options[data.answer]}</b><br><i>Penjelasan:</i> ${data.exp}`;
   }
   feedbackEl.style.display = 'block';
 }
 
-function calculateScore() {
+function showFinalScore() {
   let correctCount = 0;
   quizData.forEach((_, index) => {
     const correctBtn = document.querySelector(`.question-card:nth-child(${index + 1}) .option-btn[data-correct="true"]`);
@@ -103,11 +263,13 @@ function calculateScore() {
   });
 
   const totalScore = Math.round((correctCount / quizData.length) * 100);
-  const scoreBoard = document.getElementById('score-board');
-  document.getElementById('final-score').innerText = `${totalScore} / 100`;
-  document.getElementById('score-text').innerText = `Kamu menjawab ${correctCount} dari ${quizData.length} soal dengan benar.`;
-  scoreBoard.style.display = 'block';
-  scoreBoard.scrollIntoView({ behavior: 'smooth' });
+  document.getElementById('modal-score').innerText = `${totalScore} / 100`;
+  document.getElementById('modal-text').innerText = `Kamu berhasil menjawab benar ${correctCount} dari total ${quizData.length} soal.`;
+  document.getElementById('score-modal').style.display = 'flex';
+}
+
+function closeModal() {
+  document.getElementById('score-modal').style.display = 'none';
 }
 
 renderQuiz();
