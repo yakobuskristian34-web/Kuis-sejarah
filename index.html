@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simulasi Sejarah Kelas XII - Bab 1</title>
+  <style>
+    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f6f9; color: #333; margin: 0; padding: 20px; }
+    .container { max-width: 700px; margin: 0 auto; background: white; padding: 25px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+    h1 { font-size: 1.5rem; color: #1a365d; margin-bottom: 5px; }
+    .subtitle { font-size: 0.9rem; color: #666; margin-bottom: 20px; }
+    .question-card { margin-bottom: 25px; padding-bottom: 15px; border-bottom: 1px solid #e2e8f0; }
+    .question-title { font-weight: 600; font-size: 1.05rem; margin-bottom: 12px; }
+    .options { display: flex; flex-direction: column; gap: 8px; }
+    .option-btn { padding: 10px 15px; border: 1px solid #cbd5e0; border-radius: 6px; background: #f8fafc; cursor: pointer; text-align: left; font-size: 0.95rem; transition: background 0.2s; }
+    .option-btn:hover { background: #edf2f7; }
+    .feedback { margin-top: 10px; padding: 10px 12px; border-radius: 6px; font-size: 0.9rem; display: none; }
+    .correct { background-color: #c6f6d5; color: #22543d; border: 1px solid #9ae6b4; }
+    .incorrect { background-color: #fed7d7; color: #742a2a; border: 1px solid #feb2b2; }
+    .btn-submit { display: block; width: 100%; padding: 12px; background: #2b6cb0; color: white; border: none; border-radius: 6px; font-size: 1rem; font-weight: bold; cursor: pointer; margin-top: 20px; }
+    .btn-submit:hover { background: #2c5282; }
+    #score-board { display: none; margin-top: 25px; padding: 20px; background: #ebf8ff; border: 1px solid #bee3f8; border-radius: 8px; text-align: center; }
+    #score-board h2 { font-size: 1.8rem; color: #2b6cb0; margin: 0; }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h1>Simulasi Sejarah Kelas XII - Bab 1</h1>
+  <div class="subtitle">Perjuangan Mempertahankan Kemerdekaan</div>
+
+  <div id="quiz-container"></div>
+
+  <button class="btn-submit" onclick="calculateScore()">Selesai & Lihat Skor</button>
+
+  <div id="score-board">
+    <h3>Hasil Simulasi Kamu:</h3>
+    <h2 id="final-score">0 / 100</h2>
+    <p id="score-text"></p>
+  </div>
+</div>
+
+<script>
+const quizData = [
+  { q: "1. Konvensi Montevideo 1933 mengatur tentang...", options: ["A. Pengakuan de facto Belanda", "B. Syarat berdirinya sebuah negara", "C. Hak menentukan nasib sendiri", "D. Pembentukan Komisi Tiga Negara"], answer: 1, explanation: "Konvensi Montevideo 1933 mengatur syarat berdirinya negara: rakyat, wilayah, pemerintahan, dan kemampuan hubungan luar negeri." },
+  { q: "2. Hasil Sidang Pertama PPKI pada 18 Agustus 1945 adalah...", options: ["A. Membentuk 12 Departemen", "B. Membentuk BKR", "C. Mengesahkan UUD 1945 dan memilih Presiden/Wapres", "D. Menetapkan pembentukan partai politik"], answer: 2, explanation: "Sidang I PPKI menghasilkan 3 hal: Mengesahkan UUD 1945, memilih Soekarno-Hatta, dan membentuk Komite Nasional." },
+  { q: "3. BKR dibentuk sebagai badan keamanan dan bukan tentara resmi bertujuan untuk...", options: ["A. Menghemat anggaran", "B. Tidak memancing kecurigaan tentara Jepang", "C. Menghindari serangan Sekutu", "D. Menunggu bentukan tentara Belanda"], answer: 1, explanation: "BKR dibentuk agar tidak memancing kecurigaan pihak Jepang yang saat itu masih bersenjata lengkap." },
+  { q: "4. Hari Pahlawan 10 November dipicu oleh peristiwa pertempuran di...", options: ["A. Ambarawa", "B. Bandung", "C. Surabaya", "D. Medan"], answer: 2, explanation: "Pertempuran Surabaya puncaknya terjadi pada 10 November 1945 pasca tewasnya Brigjen Mallaby." },
+  { q: "5. Perjanjian Linggarjati menyatakan bahwa wilayah de facto RI meliputi...", options: ["A. Jawa, Madura, dan Sumatra", "B. Jawa dan Bali saja", "C. Seluruh wilayah bekas Hindia Belanda", "D. Sumatra dan Sulawesi"], answer: 0, explanation: "Perjanjian Linggarjati menghasilkan pengakuan de facto RI atas Jawa, Madura, dan Sumatra." },
+  { q: "6. Agresi Militer Belanda II terjadi pada 19 Desember 1948 dengan sasaran utama...", options: ["A. Jakarta", "B. Surabaya", "C. Bukittinggi", "D. Yogyakarta"], answer: 3, explanation: "Agresi Militer II mengincar ibu kota Yogyakarta dan menawan Soekarno-Hatta." },
+  { q: "7. Tujuan utama digelarnya Serangan Umum 1 Maret 1949 adalah...", options: ["A. Mengusir Belanda secara permanen", "B. Membuktikan kepada dunia bahwa RI dan TNI masih ada", "C. Menangkap pimpinan tentara Belanda", "D. Menguasai pelabuhan strategis"], answer: 1, explanation: "Serangan Umum 1 Maret bertujuan membuktikan ke dunia internasional bahwa RI dan TNI masih ada." },
+  { q: "8. Peristiwa pembumihangusan kota sebelum mengungsi dikenal dengan sebutan...", options: ["A. Pertempuran Medan Area", "B. Bandung Lautan Api", "C. Puputan Margarana", "D. Peristiwa Tiga Daerah"], answer: 1, explanation: "Bandung Lautan Api adalah aksi pembumihangusan Bandung Selatan atas instruksi PM Sutan Sjahrir." },
+  { q: "9. Lembaga pengganti KTN yang dibentuk PBB dengan wewenang lebih besar adalah...", options: ["A. NICA", "B. UNCI", "C. BFO", "D. AFNEI"], answer: 1, explanation: "KTN diubah menjadi UNCI (United Nations Commission for Indonesia) dengan wewenang yang lebih luas." },
+  { q: "10. Pengakuan kedaulatan Indonesia oleh Belanda sebagai hasil KMB terjadi pada tanggal...", options: ["A. 17 Agustus 1945", "B. 1 Maret 1949", "C. 27 Desember 1949", "D. 3 November 1945"], answer: 2, explanation: "Penyerahan/pengakuan kedaulatan RIS oleh Belanda dilaksanakan pada 27 Desember 1949." }
+];
+
+function renderQuiz() {
+  const container = document.getElementById('quiz-container');
+  quizData.forEach((data, index) => {
+    const card = document.createElement('div');
+    card.className = 'question-card';
+    card.innerHTML = `
+      <div class="question-title">${data.q}</div>
+      <div class="options">
+        ${data.options.map((opt, optIndex) => `
+          <button class="option-btn" onclick="checkAnswer(${index}, ${optIndex}, this)">${opt}</button>
+        `).join('')}
+      </div>
+      <div class="feedback" id="feedback-${index}"></div>
+    `;
+    container.appendChild(card);
+  });
+}
+
+function checkAnswer(qIndex, selectedOpt, btn) {
+  const data = quizData[qIndex];
+  const feedbackEl = document.getElementById(`feedback-${qIndex}`);
+  const parent = btn.parentElement;
+  
+  // Disable all buttons in this question once answered
+  const buttons = parent.querySelectorAll('.option-btn');
+  buttons.forEach(b => b.disabled = true);
+
+  if (selectedOpt === data.answer) {
+    btn.style.background = '#9ae6b4';
+    feedbackEl.className = 'feedback correct';
+    feedbackEl.innerHTML = `<b>Benar!</b> ${data.explanation}`;
+    btn.dataset.correct = "true";
+  } else {
+    btn.style.background = '#feb2b2';
+    buttons[data.answer].style.background = '#9ae6b4';
+    feedbackEl.className = 'feedback incorrect';
+    feedbackEl.innerHTML = `<b>Salah!</b> Jawaban yang benar adalah <b>${data.options[data.answer]}</b>.<br>${data.explanation}`;
+  }
+  feedbackEl.style.display = 'block';
+}
+
+function calculateScore() {
+  let correctCount = 0;
+  quizData.forEach((_, index) => {
+    const correctBtn = document.querySelector(`.question-card:nth-child(${index + 1}) .option-btn[data-correct="true"]`);
+    if (correctBtn) correctCount++;
+  });
+
+  const totalScore = Math.round((correctCount / quizData.length) * 100);
+  const scoreBoard = document.getElementById('score-board');
+  document.getElementById('final-score').innerText = `${totalScore} / 100`;
+  document.getElementById('score-text').innerText = `Kamu menjawab ${correctCount} dari ${quizData.length} soal dengan benar.`;
+  scoreBoard.style.display = 'block';
+  scoreBoard.scrollIntoView({ behavior: 'smooth' });
+}
+
+renderQuiz();
+</script>
+</body>
+</html>
